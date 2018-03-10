@@ -68,4 +68,18 @@ typedef struct target_sigaltstack {
 #define TARGET_SIGSTKSZ		16384
 
 #define TARGET_ARCH_HAS_SETUP_FRAME
+
+#ifndef UREG_O6
+#define UREG_O6        6
+#endif
+#ifndef UREG_SP
+#define UREG_SP        UREG_O6
+#endif
+
+static inline abi_ulong get_sp_from_cpustate(CPUSPARCState *state)
+{
+    return state->regwptr[UREG_SP];
+}
+
+
 #endif /* SPARC_TARGET_SIGNAL_H */

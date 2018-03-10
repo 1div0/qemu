@@ -5,6 +5,9 @@
 #include <sys/shm.h>
 #include <sys/select.h>
 #include <sys/mount.h>
+#include <sys/mman.h>
+#include <sys/syscall.h>
+#include <unistd.h>
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
 #include <linux/if_packet.h>
@@ -73,6 +76,7 @@ UNUSED static void print_socket_protocol(int domain, int type, int protocol);
 /*
  * Utility functions
  */
+#if defined(TARGET_NR_semctl) || defined(TARGET_NR_ipc)
 static void
 print_ipc_cmd(int cmd)
 {
@@ -120,6 +124,7 @@ if( cmd == val ) { \
     /* Some value we don't recognize */
     qemu_log("%d", cmd);
 }
+#endif
 
 static void
 print_signal(abi_ulong arg, int last)
@@ -188,6 +193,7 @@ static void print_si_code(int arg)
     qemu_log("%s", codename);
 }
 
+#if defined(TARGET_NR_rt_sigqueueinfo) || defined(TARGET_NR_rt_tgsigqueueinfo)
 static void get_target_siginfo(target_siginfo_t *tinfo,
                                 const target_siginfo_t *info)
 {
@@ -241,8 +247,10 @@ static void get_target_siginfo(target_siginfo_t *tinfo,
         case TARGET_SIGCHLD:
             __get_user(tinfo->_sifields._sigchld._pid,
                        &info->_sifields._sigchld._pid);
+#if !defined(TARGET_ABI_IRIX) && !defined(TARGET_ABI_SOLARIS)
             __get_user(tinfo->_sifields._sigchld._uid,
                        &info->_sifields._sigchld._uid);
+#endif
             __get_user(tinfo->_sifields._sigchld._status,
                        &info->_sifields._sigchld._status);
             __get_user(tinfo->_sifields._sigchld._utime,
@@ -274,6 +282,7 @@ static void get_target_siginfo(target_siginfo_t *tinfo,
 
     tinfo->si_code = deposit32(si_code, 16, 16, si_type);
 }
+#endif
 
 static void print_siginfo(const target_siginfo_t *tinfo)
 {
@@ -303,8 +312,8 @@ static void print_siginfo(const target_siginfo_t *tinfo)
                  tinfo->_sifields._timer._timer2);
         break;
     case QEMU_SI_POLL:
-        qemu_log(", si_band=%d, si_fd=%d",
-                 tinfo->_sifields._sigpoll._band,
+        gemu_log(", si_band="TARGET_ABI_FMT_ld", si_fd=%d",
+                 (abi_long)tinfo->_sifields._sigpoll._band,
                  tinfo->_sifields._sigpoll._fd);
         break;
     case QEMU_SI_FAULT:
@@ -312,14 +321,20 @@ static void print_siginfo(const target_siginfo_t *tinfo)
         print_pointer(tinfo->_sifields._sigfault._addr, 1);
         break;
     case QEMU_SI_CHLD:
-        qemu_log(", si_pid=%u, si_uid=%u, si_status=%d"
+        gemu_log(", si_pid=%u"
+#if !defined(TARGET_ABI_IRIX) && !defined(TARGET_ABI_SOLARIS)
+                 ", si_uid=%u"
+#endif
+                 ", si_status=%d"
                  ", si_utime=" TARGET_ABI_FMT_ld
                  ", si_stime=" TARGET_ABI_FMT_ld,
                  (unsigned int)(tinfo->_sifields._sigchld._pid),
+#if !defined(TARGET_ABI_IRIX) && !defined(TARGET_ABI_SOLARIS)
                  (unsigned int)(tinfo->_sifields._sigchld._uid),
+#endif
                  tinfo->_sifields._sigchld._status,
-                 tinfo->_sifields._sigchld._utime,
-                 tinfo->_sifields._sigchld._stime);
+                 (abi_long)tinfo->_sifields._sigchld._utime,
+                 (abi_long)tinfo->_sifields._sigchld._stime);
         break;
     case QEMU_SI_RT:
         qemu_log(", si_pid=%u, si_uid=%u, si_sigval=" TARGET_ABI_FMT_ld,
@@ -460,9 +475,11 @@ print_socket_type(int type)
     case TARGET_SOCK_SEQPACKET:
         qemu_log("SOCK_SEQPACKET");
         break;
+#ifdef TARGET_SOCK_PACKET
     case TARGET_SOCK_PACKET:
         qemu_log("SOCK_PACKET");
         break;
+#endif
     }
     if (type & TARGET_SOCK_CLOEXEC) {
         qemu_log("|SOCK_CLOEXEC");
@@ -475,8 +492,11 @@ print_socket_type(int type)
 static void
 print_socket_protocol(int domain, int type, int protocol)
 {
-    if (domain == AF_PACKET ||
-        (domain == AF_INET && type == TARGET_SOCK_PACKET)) {
+    if (domain == AF_PACKET
+#ifdef TARGET_SOCK_PACKET
+        || (domain == AF_INET && type == TARGET_SOCK_PACKET)
+#endif
+       ) {
         switch (protocol) {
         case 0x0003:
             qemu_log("ETH_P_ALL");
@@ -774,6 +794,7 @@ print_syscall_ret_newselect(const struct syscallname *name, abi_long ret)
 }
 #endif
 
+#ifdef TARGET_NR_adjtimex
 /* special meanings of adjtimex()' non-negative return values */
 #define TARGET_TIME_OK       0   /* clock synchronized, no leap second */
 #define TARGET_TIME_INS      1   /* insert leap second */
@@ -1564,6 +1585,7 @@ print_fcntl(const struct syscallname *name,
         qemu_log("F_SETOWN,");
         print_raw_param(TARGET_ABI_FMT_ld, arg2, 0);
         break;
+#ifdef TARGET_F_SETSIG
     case TARGET_F_GETSIG:
         qemu_log("F_GETSIG");
         break;
@@ -1571,6 +1593,7 @@ print_fcntl(const struct syscallname *name,
         qemu_log("F_SETSIG,");
         print_raw_param(TARGET_ABI_FMT_ld, arg2, 0);
         break;
+#endif
 #if TARGET_ABI_BITS == 32
     case TARGET_F_GETLK64:
         qemu_log("F_GETLK64,");
@@ -1709,9 +1732,12 @@ print_socket(const struct syscallname *name,
     print_socket_domain(domain);
     qemu_log(",");
     print_socket_type(type);
-    qemu_log(",");
-    if (domain == AF_PACKET ||
-        (domain == AF_INET && type == TARGET_SOCK_PACKET)) {
+    gemu_log(",");
+    if (domain == AF_PACKET
+#ifdef TARGET_SOCK_PACKET
+        || (domain == AF_INET && type == TARGET_SOCK_PACKET)
+#endif
+       ) {
         protocol = tswap16(protocol);
     }
     print_socket_protocol(domain, type, protocol);
@@ -2080,16 +2106,25 @@ print_bind(const struct syscallname *name,
 }
 #endif
 
-#if defined(TARGET_NR_stat) || defined(TARGET_NR_stat64) || \
-    defined(TARGET_NR_lstat) || defined(TARGET_NR_lstat64)
+#if defined(TARGET_NR_stat) || defined(TARGET_NR_stat64) || defined(TARGET_NR_xstat) || \
+    defined(TARGET_NR_lstat) || defined(TARGET_NR_lstat64) || defined(TARGET_NR_lxstat)
 static void
 print_stat(const struct syscallname *name,
     abi_long arg0, abi_long arg1, abi_long arg2,
     abi_long arg3, abi_long arg4, abi_long arg5)
 {
     print_syscall_prologue(name);
+#if defined(TARGET_NR_xstat) || defined(TARGET_NR_lxstat)
+    if (name->nr == TARGET_NR_xstat || name->nr == TARGET_NR_lxstat) {
+        print_raw_param("%d", arg0, 0);
+        print_string(arg1, 0);
+        print_pointer(arg2, 1);
+    } else
+#endif
+    {
     print_string(arg0, 0);
     print_pointer(arg1, 1);
+    }
     print_syscall_epilogue(name);
 }
 #define print_lstat     print_stat
@@ -2097,15 +2132,24 @@ print_stat(const struct syscallname *name,
 #define print_lstat64   print_stat
 #endif
 
-#if defined(TARGET_NR_fstat) || defined(TARGET_NR_fstat64)
+#if defined(TARGET_NR_fstat) || defined(TARGET_NR_fstat64) || defined(TARGET_NR_fxstat)
 static void
 print_fstat(const struct syscallname *name,
     abi_long arg0, abi_long arg1, abi_long arg2,
     abi_long arg3, abi_long arg4, abi_long arg5)
 {
     print_syscall_prologue(name);
+#ifdef TARGET_NR_fxstat
+    if (name->nr == TARGET_NR_fxstat) {
+        print_raw_param("%d", arg0, 0);
+        print_raw_param("%d", arg1, 0);
+        print_pointer(arg2, 1);
+    } else
+#endif
+    {
     print_raw_param("%d", arg0, 0);
     print_pointer(arg1, 1);
+    }
     print_syscall_epilogue(name);
 }
 #define print_fstat64     print_fstat
@@ -2825,7 +2869,7 @@ print_syscall(int num,
     int i;
     const char *format="%s(" TARGET_ABI_FMT_ld "," TARGET_ABI_FMT_ld "," TARGET_ABI_FMT_ld "," TARGET_ABI_FMT_ld "," TARGET_ABI_FMT_ld "," TARGET_ABI_FMT_ld ")";
 
-    qemu_log("%d ", getpid());
+    gemu_log("%ld ", syscall(SYS_gettid) );
 
     for(i=0;i<nsyscalls;i++)
         if( scnames[i].nr == num ) {
@@ -2842,7 +2886,8 @@ print_syscall(int num,
             }
             return;
         }
-    qemu_log("Unknown syscall %d\n", num);
+    gemu_log("Unknown syscall %d", num);
+    gemu_log(format,"", arg1,arg2,arg3,arg4,arg5,arg6);
 }
 
 
@@ -2867,8 +2912,17 @@ print_syscall_ret(int num, abi_long ret)
                     qemu_log(" = " TARGET_ABI_FMT_ld "\n", ret);
                 }
             }
-            break;
         }
+
+    if (ret < 0) {
+        errstr = target_strerror(-ret);
+    }
+    if (errstr) {
+        gemu_log(" = -1 errno=" TARGET_ABI_FMT_ld " (%s)\n",
+                 -ret, errstr);
+    } else {
+        gemu_log(" = " TARGET_ABI_FMT_ld "\n", ret);
+    }
 }
 
 void print_taken_signal(int target_signum, const target_siginfo_t *tinfo)
