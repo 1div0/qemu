@@ -7960,10 +7960,7 @@ case "$target_name" in
   solaris)
     TARGET_ARCH=sparc
     TARGET_ABI_DIR=solaris
-<<<<<<< HEAD
-=======
     TARGET_BASE_ARCH=sparc
->>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
     echo "TARGET_ABI_SOLARIS=y" >> $config_target_mak
   ;;
   solaris64)
