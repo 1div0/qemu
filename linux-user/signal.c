@@ -77,7 +77,10 @@ static uint8_t host_to_target_signal_table[_NSIG] = {
     [SIGSYS] = TARGET_SIGSYS,
     /* next signals stay the same */
 };
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 static uint8_t target_to_host_signal_table[TARGET_NSIG];
 
 static inline int on_sig_stack(unsigned long sp)
@@ -100,7 +103,11 @@ int host_to_target_signal(int sig)
 /* valid sig is between 1 and TARGET_NSIG */
 int target_to_host_signal(int sig)
 {
+<<<<<<< HEAD
     if (sig < 1 || sig > TARGET_NSIG) {
+=======
+    if (sig < 0 || sig >= TARGET_NSIG)
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
         return sig;
     }
     return target_to_host_signal_table[sig];
@@ -129,6 +136,7 @@ void host_to_target_sigset_internal(target_sigset_t *d,
 {
     int host_sig, target_sig;
     target_sigemptyset(d);
+<<<<<<< HEAD
     for (host_sig = 1; host_sig < _NSIG; host_sig++) {
         target_sig = host_to_target_signal(host_sig);
         if (target_sig < 1 || target_sig > TARGET_NSIG) {
@@ -136,6 +144,11 @@ void host_to_target_sigset_internal(target_sigset_t *d,
         }
         if (sigismember(s, host_sig)) {
             target_sigaddset(d, target_sig);
+=======
+    for (i = 1; i <= _NSIG; i++) {
+        if (sigismember(s, i)) {
+            target_sigaddset(d, host_to_target_signal(i));
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
         }
     }
 }
@@ -155,6 +168,7 @@ void target_to_host_sigset_internal(sigset_t *d,
 {
     int host_sig, target_sig;
     sigemptyset(d);
+<<<<<<< HEAD
     for (target_sig = 1; target_sig <= TARGET_NSIG; target_sig++) {
         host_sig = target_to_host_signal(target_sig);
         if (host_sig < 1 || host_sig >= _NSIG) {
@@ -162,6 +176,11 @@ void target_to_host_sigset_internal(sigset_t *d,
         }
         if (target_sigismember(s, target_sig)) {
             sigaddset(d, host_sig);
+=======
+    for (i = 1; i <= TARGET_NSIG_BPW * TARGET_NSIG_WORDS; i++) {
+        if (target_sigismember(s, i)) {
+            sigaddset(d, target_to_host_signal(i));
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
         }
     }
 }
@@ -525,6 +544,7 @@ static int core_dump_signal(int sig)
     }
 }
 
+<<<<<<< HEAD
 static void signal_table_init(void)
 {
     int host_sig, target_sig, count;
@@ -573,6 +593,10 @@ static void signal_table_init(void)
 
 void signal_init(CPUArchState *env)
 {
+=======
+void signal_init(CPUArchState *env)
+{
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
     CPUState *cpu = ENV_GET_CPU(env);
     TaskState *ts = (TaskState *)cpu->opaque;
     struct sigaction act;
@@ -740,8 +764,13 @@ static inline void rewind_if_in_safe_syscall(void *puc)
 static void host_signal_handler(int host_signum, siginfo_t *info,
                                 void *puc)
 {
+<<<<<<< HEAD
     CPUArchState *env = thread_cpu->env_ptr;
     CPUState *cpu = env_cpu(env);
+=======
+    CPUState *cpu = thread_cpu;
+    CPUArchState *env = cpu->env_ptr;
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
     TaskState *ts = cpu->opaque;
 
     int sig;

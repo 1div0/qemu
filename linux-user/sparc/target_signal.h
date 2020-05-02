@@ -67,8 +67,11 @@ typedef struct target_sigaltstack {
 #define TARGET_MINSIGSTKSZ	4096
 #define TARGET_SIGSTKSZ		16384
 
+<<<<<<< HEAD
 #define TARGET_ARCH_HAS_SETUP_FRAME
 
+=======
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 #ifndef UREG_O6
 #define UREG_O6        6
 #endif

@@ -2855,6 +2855,7 @@ static void tcg_out_vec_op(TCGContext *s, TCGOpcode opc,
         goto gen_simd;
 #if TCG_TARGET_REG_BITS == 32
     case INDEX_op_dup2_vec:
+<<<<<<< HEAD
         /* First merge the two 32-bit inputs to a single 64-bit element. */
         tcg_out_vex_modrm(s, OPC_PUNPCKLDQ, a0, a1, a2);
         /* Then replicate the 64-bit elements across the rest of the vector. */
@@ -2868,6 +2869,12 @@ static void tcg_out_vec_op(TCGContext *s, TCGOpcode opc,
         a2 = a1;
         a1 = 0;
         goto gen_simd;
+=======
+        /* Constraints have already placed both 32-bit inputs in xmm regs.  */
+        insn = OPC_PUNPCKLDQ;
+        goto gen_simd;
+#endif
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
     gen_simd:
         tcg_debug_assert(insn != OPC_UD2);
         if (type == TCG_TYPE_V256) {

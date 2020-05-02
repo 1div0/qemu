@@ -39,6 +39,11 @@ enum sock_type {
 
 #if defined(TARGET_ABI_IRIX) || defined(TARGET_ABI_SOLARIS)
 
+<<<<<<< HEAD
+=======
+#if defined(TARGET_ABI_IRIX) || defined(TARGET_ABI_SOLARIS)
+
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
     /* For setsockopt(2) */
     #define TARGET_SOL_SOCKET   0xffff
 

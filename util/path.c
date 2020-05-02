@@ -248,4 +248,26 @@ void init_paths(const char *prefix_list)
         }
     }
     g_free(list);
+<<<<<<< HEAD
+=======
+}
+
+/* Look for path in emulation dir, otherwise return name. */
+const char *path(const char *name)
+{
+    const char *p;
+    int i;
+
+    /* Only do absolute paths: quick and dirty, but should mostly be OK.
+       Could do relative by tracking cwd. */
+    if (!base || !name || name[0] != '/')
+        return name;
+
+    for (i = 0; i < base_count; i++) {
+        if ((p = follow_path(base[i], name)))
+            return p;
+    }
+
+    return name;
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 }

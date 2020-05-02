@@ -7748,7 +7748,11 @@ esac
 target_bigendian="no"
 case "$target_name" in
   armeb|aarch64_be|hppa|lm32|m68k|microblaze|irix|irixn32|irix64|mips|mipsn32|mips64|moxie|or1k|ppc|ppcemb|ppc64|ppc64abi32|s390x|sh4eb|solaris|solaris64|sparc|sparc64|sparc32plus|xtensaeb)
+<<<<<<< HEAD
   target_bigendian="yes"
+=======
+  target_bigendian=yes
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
   ;;
 esac
 target_softmmu="no"
@@ -7856,6 +7860,28 @@ case "$target_name" in
     echo "TARGET_ABI_MIPSN64=y" >> $config_target_mak
     echo "TARGET_ABI_IRIX=y" >> $config_target_mak
   ;;
+  irix)
+    TARGET_ARCH=mips
+    TARGET_ABI_DIR=irix
+    TARGET_BASE_ARCH=mips
+    echo "TARGET_ABI_MIPSO32=y" >> $config_target_mak
+    echo "TARGET_ABI_IRIX=y" >> $config_target_mak
+  ;;
+  irixn32)
+    TARGET_ARCH=mips64
+    TARGET_ABI_DIR=irix
+    TARGET_BASE_ARCH=mips
+    echo "TARGET_ABI_MIPSN32=y" >> $config_target_mak
+    echo "TARGET_ABI32=y" >> $config_target_mak
+    echo "TARGET_ABI_IRIX=y" >> $config_target_mak
+  ;;
+  irix64)
+    TARGET_ARCH=mips64
+    TARGET_ABI_DIR=irix
+    TARGET_BASE_ARCH=mips
+    echo "TARGET_ABI_MIPSN64=y" >> $config_target_mak
+    echo "TARGET_ABI_IRIX=y" >> $config_target_mak
+  ;;
   mips|mipsel)
     mttcg="yes"
     TARGET_ARCH=mips
@@ -7938,6 +7964,10 @@ case "$target_name" in
   solaris)
     TARGET_ARCH=sparc
     TARGET_ABI_DIR=solaris
+<<<<<<< HEAD
+=======
+    TARGET_BASE_ARCH=sparc
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
     echo "TARGET_ABI_SOLARIS=y" >> $config_target_mak
   ;;
   solaris64)

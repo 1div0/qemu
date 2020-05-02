@@ -312,7 +312,11 @@ static void print_siginfo(const target_siginfo_t *tinfo)
                  tinfo->_sifields._timer._timer2);
         break;
     case QEMU_SI_POLL:
+<<<<<<< HEAD
         gemu_log(", si_band="TARGET_ABI_FMT_ld", si_fd=%d",
+=======
+        gemu_log(", si_band = "TARGET_ABI_FMT_ld", si_fd = %d",
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
                  (abi_long)tinfo->_sifields._sigpoll._band,
                  tinfo->_sifields._sigpoll._fd);
         break;
@@ -321,11 +325,19 @@ static void print_siginfo(const target_siginfo_t *tinfo)
         print_pointer(tinfo->_sifields._sigfault._addr, 1);
         break;
     case QEMU_SI_CHLD:
+<<<<<<< HEAD
         gemu_log(", si_pid=%u"
 #if !defined(TARGET_ABI_IRIX) && !defined(TARGET_ABI_SOLARIS)
                  ", si_uid=%u"
 #endif
                  ", si_status=%d"
+=======
+        gemu_log(", si_pid = %u"
+#if !defined(TARGET_ABI_IRIX) && !defined(TARGET_ABI_SOLARIS)
+                 ", si_uid = %u"
+#endif
+                 ", si_status = %d"
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
                  ", si_utime=" TARGET_ABI_FMT_ld
                  ", si_stime=" TARGET_ABI_FMT_ld,
                  (unsigned int)(tinfo->_sifields._sigchld._pid),
@@ -480,12 +492,15 @@ print_socket_type(int type)
         qemu_log("SOCK_PACKET");
         break;
 #endif
+<<<<<<< HEAD
     }
     if (type & TARGET_SOCK_CLOEXEC) {
         qemu_log("|SOCK_CLOEXEC");
     }
     if (type & TARGET_SOCK_NONBLOCK) {
         qemu_log("|SOCK_NONBLOCK");
+=======
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
     }
 }
 
@@ -2093,6 +2108,7 @@ print_socketcall(const struct syscallname *name,
 }
 #endif
 
+<<<<<<< HEAD
 #if defined(TARGET_NR_bind)
 static void
 print_bind(const struct syscallname *name,
@@ -2106,6 +2122,8 @@ print_bind(const struct syscallname *name,
 }
 #endif
 
+=======
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 #if defined(TARGET_NR_stat) || defined(TARGET_NR_stat64) || defined(TARGET_NR_xstat) || \
     defined(TARGET_NR_lstat) || defined(TARGET_NR_lstat64) || defined(TARGET_NR_lxstat)
 static void
@@ -2900,6 +2918,7 @@ print_syscall_ret(int num, abi_long ret)
     for(i=0;i<nsyscalls;i++)
         if( scnames[i].nr == num ) {
             if( scnames[i].result != NULL ) {
+<<<<<<< HEAD
                 scnames[i].result(&scnames[i], ret);
             } else {
                 if (ret < 0) {
@@ -2911,6 +2930,10 @@ print_syscall_ret(int num, abi_long ret)
                 } else {
                     qemu_log(" = " TARGET_ABI_FMT_ld "\n", ret);
                 }
+=======
+                scnames[i].result(&scnames[i],ret);
+                return;
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
             }
         }
 

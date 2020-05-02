@@ -4,9 +4,12 @@
  *
  * Taken from asm-generic/errno-base.h and asm-generic/errno.h
  */
+<<<<<<< HEAD
 #ifndef LINUX_USER_ERRNO_DEFS_H
 #define LINUX_USER_ERRNO_DEFS_H
 
+=======
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 #if defined TARGET_ABI_IRIX || defined TARGET_ABI_SOLARIS
 #define TARGET_EPERM	1	/* Operation not permitted		*/
 #define TARGET_ENOENT	2	/* No such file or directory		*/

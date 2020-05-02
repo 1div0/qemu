@@ -4189,11 +4189,14 @@ void stop_all_tasks(void)
 void init_task_state(TaskState *ts)
 {
     ts->used = 1;
+<<<<<<< HEAD
     ts->sigaltstack_used = (struct target_sigaltstack) {
         .ss_sp = 0,
         .ss_size = 0,
         .ss_flags = TARGET_SS_DISABLE,
     };
+=======
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 
 #ifdef TARGET_ABI_IRIX
     pthread_mutex_init(&ts->procblk_mutex, NULL);

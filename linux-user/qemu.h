@@ -68,6 +68,9 @@ struct image_info {
 #ifdef TARGET_ABI_IRIX
         abi_ulong       phdr_offset;
 #endif
+#ifdef TARGET_ABI_IRIX
+        abi_ulong       phdr_offset;
+#endif
 };
 
 #ifdef TARGET_I386
@@ -429,8 +432,11 @@ long do_sigreturn(CPUArchState *env);
 long do_rt_sigreturn(CPUArchState *env);
 abi_long do_sigaltstack(CPUArchState *env, abi_ulong uss_addr, abi_ulong uoss_addr, abi_ulong sp);
 int do_sigprocmask(CPUArchState *env, int how, const sigset_t *set, sigset_t *oldset);
+<<<<<<< HEAD
 abi_long do_swapcontext(CPUArchState *env, abi_ulong uold_ctx,
                         abi_ulong unew_ctx, abi_long ctx_size);
+=======
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 /**
  * block_signals: block all signals while handling this guest syscall
  *

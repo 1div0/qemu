@@ -2360,6 +2360,11 @@ abi_ulong sgi_map_elf_image(int image_fd, struct elf_phdr *phdr, int phnum)
         }
     }
 
+<<<<<<< HEAD
+=======
+    mmap_lock();
+
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
     /* The image indicates that it can be loaded anywhere.  Find a
        location that can hold the memory space required.  If the
        image is pre-linked, LOADDR will be non-zero.  Since we do
@@ -2406,9 +2411,19 @@ abi_ulong sgi_map_elf_image(int image_fd, struct elf_phdr *phdr, int phnum)
         }
     }
 
+<<<<<<< HEAD
     return load_bias + phdr[0].p_vaddr;
 
  exit_perror:
+=======
+    mmap_unlock();
+
+    return load_bias + phdr[0].p_vaddr;
+
+ exit_perror:
+    mmap_unlock();
+
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
     errmsg = strerror(errno);
     fprintf(stderr, "error in syssgi elfmap: %s\n", errmsg);
     return -ENOEXEC;
@@ -2506,6 +2521,7 @@ static void load_elf_image(const char *image_name, int image_fd,
              */
             probe_guest_base(image_name, loaddr, hiaddr);
         }
+<<<<<<< HEAD
     }
 
     /*
@@ -2528,6 +2544,15 @@ static void load_elf_image(const char *image_name, int image_fd,
                             -1, 0);
     if (load_addr == -1) {
         goto exit_perror;
+=======
+        /* unmap to avoid failure if objects would be loaded into a hole */
+        target_munmap(load_addr, hiaddr - loaddr);
+    } else if (pinterp_name != NULL) {
+        /* This is the main executable.  Make sure that the low
+           address does not conflict with MMAP_MIN_ADDR or the
+           QEMU application itself.  */
+        probe_guest_base(image_name, loaddr, hiaddr);
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
     }
     load_bias = load_addr - loaddr;
 
@@ -2933,11 +2958,14 @@ int load_elf_binary(struct linux_binprm *bprm, struct image_info *info)
     char *elf_interpreter = NULL;
     char *scratch;
     abi_ulong top;
+<<<<<<< HEAD
 
     memset(&interp_info, 0, sizeof(interp_info));
 #ifdef TARGET_MIPS
     interp_info.fp_abi = MIPS_ABI_FP_UNKNOWN;
 #endif
+=======
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 
     info->start_mmap = (abi_ulong)ELF_START_MMAP;
 

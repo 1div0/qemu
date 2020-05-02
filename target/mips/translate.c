@@ -3632,11 +3632,17 @@ static void gen_ld(DisasContext *ctx, uint32_t opc,
         gen_store_gpr(t0, rt);
         break;
     case OPC_LDL:
+<<<<<<< HEAD
         t1 = tcg_temp_new();
         /*
          * Do a byte access to possibly trigger a page
          * fault with the unaligned address.
          */
+=======
+        t1 = tcg_temp_local_new(); /*X*/
+        /* Do a byte access to possibly trigger a page
+           fault with the unaligned address.  */
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
         tcg_gen_qemu_ld_tl(t1, t0, mem_idx, MO_UB);
         tcg_gen_andi_tl(t1, t0, 7);
 #ifndef TARGET_WORDS_BIGENDIAN
@@ -3656,11 +3662,17 @@ static void gen_ld(DisasContext *ctx, uint32_t opc,
         gen_store_gpr(t0, rt);
         break;
     case OPC_LDR:
+<<<<<<< HEAD
         t1 = tcg_temp_new();
         /*
          * Do a byte access to possibly trigger a page
          * fault with the unaligned address.
          */
+=======
+        t1 = tcg_temp_local_new(); /*X*/
+        /* Do a byte access to possibly trigger a page
+           fault with the unaligned address.  */
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
         tcg_gen_qemu_ld_tl(t1, t0, mem_idx, MO_UB);
         tcg_gen_andi_tl(t1, t0, 7);
 #ifdef TARGET_WORDS_BIGENDIAN
@@ -3737,11 +3749,17 @@ static void gen_ld(DisasContext *ctx, uint32_t opc,
         mem_idx = MIPS_HFLAG_UM;
         /* fall through */
     case OPC_LWL:
+<<<<<<< HEAD
         t1 = tcg_temp_new();
         /*
          * Do a byte access to possibly trigger a page
          * fault with the unaligned address.
          */
+=======
+        t1 = tcg_temp_local_new(); /*X*/
+        /* Do a byte access to possibly trigger a page
+           fault with the unaligned address.  */
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
         tcg_gen_qemu_ld_tl(t1, t0, mem_idx, MO_UB);
         tcg_gen_andi_tl(t1, t0, 3);
 #ifndef TARGET_WORDS_BIGENDIAN
@@ -3765,11 +3783,17 @@ static void gen_ld(DisasContext *ctx, uint32_t opc,
         mem_idx = MIPS_HFLAG_UM;
         /* fall through */
     case OPC_LWR:
+<<<<<<< HEAD
         t1 = tcg_temp_new();
         /*
          * Do a byte access to possibly trigger a page
          * fault with the unaligned address.
          */
+=======
+        t1 = tcg_temp_local_new(); /*X*/
+        /* Do a byte access to possibly trigger a page
+           fault with the unaligned address.  */
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
         tcg_gen_qemu_ld_tl(t1, t0, mem_idx, MO_UB);
         tcg_gen_andi_tl(t1, t0, 3);
 #ifdef TARGET_WORDS_BIGENDIAN

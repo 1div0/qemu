@@ -1096,6 +1096,7 @@ struct target_pollfd {
 #define TARGET_KDSETLED        0x4B32	/* set led state [lights, not flags] */
 #define TARGET_KDSIGACCEPT     0x4B4E
 
+<<<<<<< HEAD
 struct target_rtc_pll_info {
     int pll_ctrl;
     int pll_value;
@@ -1137,6 +1138,8 @@ struct target_rtc_pll_info {
 #define TARGET_FIOGETOWN       TARGET_IOR('f', 123, int)
 #define TARGET_FIOSETOWN       TARGET_IOW('f', 124, int)
 
+=======
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 #ifdef TARGET_ABI_IRIX
 #define TARGET_SIOCNREAD       0x4004730a
 #endif
@@ -1605,6 +1608,7 @@ struct target_winsize {
 #define TARGET_MAP_NONBLOCK	0x20000		/* do not block on IO */
 #define TARGET_MAP_STACK        0x40000         /* ignored */
 #define TARGET_MAP_HUGETLB      0x80000         /* create a huge page mapping */
+<<<<<<< HEAD
 
 #elif defined(TARGET_XTENSA)
 #define TARGET_MAP_FIXED	0x10		/* Interpret addr exactly */
@@ -1620,6 +1624,9 @@ struct target_winsize {
 #define TARGET_MAP_HUGETLB  0x80000         /* create a huge page mapping */
 
 #elif defined(TARGET_ABI_SOLARIS)
+=======
+#elif defined TARGET_ABI_SOLARIS
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 #define TARGET_MAP_FIXED	0x10		/* Interpret addr exactly */
 #define TARGET_MAP_ANONYMOUS	0x0100		/* don't use a file */
 #define TARGET_MAP_GROWSDOWN	0		/* stack-like segment */
@@ -1632,7 +1639,10 @@ struct target_winsize {
 #define TARGET_MAP_UNINITIALIZED 0		/* for anonymous mmap, memory could be uninitialized */
 #define TARGET_MAP_STACK        0               /* ignored */
 #define TARGET_MAP_HUGETLB      0               /* create a huge page mapping */
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 #else
 #define TARGET_MAP_FIXED	0x10		/* Interpret addr exactly */
 #define TARGET_MAP_ANONYMOUS	0x20		/* don't use a file */
@@ -1767,7 +1777,11 @@ struct target_stat {
 	abi_long	target_st_ctime;
 	abi_ulong	__unused3;
 	abi_int		st_blksize;
+<<<<<<< HEAD
 	int64_t		st_blocks;
+=======
+	abi_llong	st_blocks;
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 	char		st_fstype[16];
 	abi_long	__unused4[8];
 };
@@ -1776,14 +1790,22 @@ struct target_stat {
 struct target_stat64 {
 	abi_ulong	st_dev;
 	abi_long	st_pad1[3];
+<<<<<<< HEAD
 	uint64_t	st_ino;
+=======
+	abi_ullong	st_ino;
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 	abi_uint	st_mode;
 	abi_uint	st_nlink;
 	abi_int		st_uid;
 	abi_int		st_gid;
 	abi_ulong	st_rdev;
 	abi_long	st_pad2[2];
+<<<<<<< HEAD
 	int64_t		st_size;
+=======
+	abi_llong	st_size;
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 	abi_long	target_st_atime;
 	abi_ulong	__unused1;
 	abi_long	target_st_mtime;
@@ -1791,7 +1813,11 @@ struct target_stat64 {
 	abi_long	target_st_ctime;
 	abi_ulong	__unused3;
 	abi_int		st_blksize;
+<<<<<<< HEAD
 	int64_t		st_blocks;
+=======
+	abi_llong	st_blocks;
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 	char		st_fstype[16];
 	abi_long	__unused4[8];
 };
@@ -2125,7 +2151,11 @@ struct target_stat {
 struct target_stat64 {
 	uint32_t		st_dev;
 	abi_long		st_pad0[3]; /* Reserved for st_dev expansion */
+<<<<<<< HEAD
 	uint64_t		st_ino;
+=======
+	abi_ullong		st_ino;
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 
 	uint32_t		st_mode;
 	uint32_t		st_nlink;
@@ -2135,7 +2165,11 @@ struct target_stat64 {
 
 	uint32_t		st_rdev;
 	abi_long		st_pad1[2]; /* Reserved for st_rdev expansion */
+<<<<<<< HEAD
 	int64_t			st_size;
+=======
+	abi_llong		st_size;
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
         abi_long                st_pad2;
 
 	/*
@@ -2152,7 +2186,11 @@ struct target_stat64 {
         abi_long                target_st_ctime_nsec;
 
         abi_long                st_blksize;
+<<<<<<< HEAD
 	int64_t			st_blocks;
+=======
+	abi_llong		st_blocks;
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 	char			st_fstype[16];
 	abi_long		st_projid;
 	abi_long		st_pad[7];
@@ -3609,6 +3647,7 @@ struct target_user_cap_data {
 #define TARGET_SYSLOG_ACTION_SIZE_BUFFER   10
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 struct target_statx_timestamp {
    int64_t tv_sec;
    uint32_t tv_nsec;
@@ -3647,6 +3686,8 @@ struct target_statx {
 };
 
 =======
+=======
+>>>>>>> 7b95626701e3c54e06a570f98d552464cf41921f
 #if defined TARGET_ABI_IRIX || defined TARGET_ABI_SOLARIS
 struct target_statvfs {
         abi_ulong f_bsize;        /* fundamental file system block size */
